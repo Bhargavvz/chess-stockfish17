@@ -1,0 +1,511 @@
+/* Modern Chess Game Styling */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+:root {
+  --primary-color: #1a237e;
+  --primary-light: #534bae;
+  --primary-dark: #000051;
+  --secondary-color: #0d47a1;
+  --accent-color: #2196f3;
+  --light-color: #f5f5f5;
+  --dark-color: #121212;
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+  --danger-color: #f44336;
+  --capture-color: rgba(244, 67, 54, 0.6);
+  --move-color: rgba(76, 175, 80, 0.5);
+  --selected-color: rgba(33, 150, 243, 0.5);
+  --last-move-color: rgba(255, 235, 59, 0.5);
+  --font-main: 'Roboto', 'Segoe UI', sans-serif;
+  --font-heading: 'Montserrat', 'Roboto', sans-serif;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+  --border-radius: 8px;
+  --transition-speed: 0.3s;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--light-color);
+  color: var(--dark-color);
+}
+
+.App {
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+}
+
+.App-header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1.2rem;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  z-index: 10;
+}
+
+.App-header h1 {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 600;
+  font-family: var(--font-heading);
+  letter-spacing: 0.5px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  flex: 1;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.controls-panel {
+  background-color: white;
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.controls-panel:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  padding: 10px 16px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn i {
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #1e88e5;
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #0a3d8f;
+}
+
+.btn-success {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #43a047;
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #e53935;
+}
+
+/* Settings Panel */
+.settings-panel {
+  width: 100%;
+  max-width: 1000px;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.setting-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.setting-item label {
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+.setting-item select,
+.setting-item input[type="checkbox"] {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.setting-item select:hover,
+.setting-item input[type="checkbox"]:hover {
+  border-color: var(--accent-color);
+}
+
+.setting-item select:focus,
+.setting-item input[type="checkbox"]:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.25);
+}
+
+.setting-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.chess-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.board-container {
+  width: min(80vw, 600px);
+  aspect-ratio: 1;
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  transition: transform var(--transition-speed);
+}
+
+.board-container:hover {
+  transform: scale(1.01);
+}
+
+.game-info-panel {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info-card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  padding: 1.2rem;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.info-card h3 {
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+  font-family: var(--font-heading);
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 1.3rem;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.status-indicator span {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.status-indicator.thinking {
+  color: var(--warning-color);
+}
+
+.status-indicator.checkmate {
+  color: var(--danger-color);
+}
+
+.status-indicator.draw {
+  color: var(--secondary-color);
+}
+
+.status-indicator.active {
+  color: var(--success-color);
+}
+
+.move-history {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.move-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  gap: 8px;
+  text-align: left;
+}
+
+.move-number {
+  font-weight: bold;
+  color: var(--secondary-color);
+  padding: 2px 4px;
+}
+
+.move-white, .move-black {
+  font-family: monospace;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.move-white {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.move-black {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.difficulty-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.difficulty-selector label {
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+.difficulty-selector select {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: white;
+  font-family: var(--font-main);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.difficulty-selector select:hover {
+  border-color: var(--accent-color);
+}
+
+.difficulty-selector select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.25);
+}
+
+/* Predictions styling */
+.predictions-list {
+  margin-top: 0.5rem;
+}
+
+.prediction-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.prediction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.prediction-item:hover {
+  transform: translateX(5px);
+  background-color: rgba(33, 150, 243, 0.1);
+}
+
+.good-move {
+  background-color: rgba(76, 175, 80, 0.15);
+  border-left: 4px solid var(--success-color);
+}
+
+.poor-move {
+  background-color: rgba(244, 67, 54, 0.1);
+  border-left: 4px solid var(--danger-color);
+}
+
+.move-notation {
+  font-family: monospace;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.move-evaluation {
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.good-move .move-evaluation {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.poor-move .move-evaluation {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+/* Footer styling */
+footer {
+  background-color: var(--primary-dark);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+footer a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.2s;
+  margin: 0 5px;
+}
+
+footer a:hover {
+  color: #64b5f6;
+  text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Toast customization */
+.Toastify__toast {
+  border-radius: 8px !important;
+  font-family: var(--font-main) !important;
+}
+
+.Toastify__toast-body {
+  font-weight: 500 !important;
+}
+
+@media (max-width: 768px) {
+  .game-container {
+    flex-direction: column;
+  }
+  
+  .controls-panel {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .board-container {
+    width: 95vw;
+  }
+  
+  .App-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .button-group {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .difficulty-selector {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+} 
