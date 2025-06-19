@@ -168,11 +168,15 @@ const ChessGame = ({ playerColor, searchDepth = 15 }) => {
   // Handle square click for move selection
   const handleSquareClick = (square) => {
     // Don't allow moves during engine thinking or if game is over
-    if (isThinking || game.isGameOver()) return;
+    if (isThinking || game.isGameOver()) {
+      toast.warning('Cannot move while AI is thinking or game is over');
+      return;
+    }
     
     // Only allow moves if it's the player's turn
     if ((game.turn() === 'w' && playerColor === 'black') ||
         (game.turn() === 'b' && playerColor === 'white')) {
+      toast.info('Wait for your turn');
       return;
     }
     
@@ -189,6 +193,15 @@ const ChessGame = ({ playerColor, searchDepth = 15 }) => {
         });
         
         setPossibleMoves(moves);
+        
+        if (moves.length === 0) {
+          toast.info('This piece has no legal moves');
+          setSelectedSquare(null);
+          setPossibleMoves([]);
+        }
+      } else {
+        // Clicked on empty square or opponent's piece without selection
+        toast.warning('Please select one of your pieces first');
       }
     } 
     // If a square is already selected
@@ -218,26 +231,32 @@ const ChessGame = ({ playerColor, searchDepth = 15 }) => {
           
           // Update predictions
           getPredictedMoves();
+        }        } else {
+          // If clicked on another own piece, select that one instead
+          const piece = game.get(square);
+          if (piece && piece.color === game.turn()) {
+            setSelectedSquare(square);
+            
+            // Get possible moves for this piece
+            const moves = game.moves({ 
+              square: square, 
+              verbose: true 
+            });
+            
+            setPossibleMoves(moves);
+            
+            if (moves.length === 0) {
+              toast.info('This piece has no legal moves');
+              setSelectedSquare(null);
+              setPossibleMoves([]);
+            }
+          } else {
+            // If clicked on an invalid square (empty or opponent's piece), show warning and clear selection
+            toast.warning('Invalid move! You can only move to highlighted squares');
+            setSelectedSquare(null);
+            setPossibleMoves([]);
+          }
         }
-      } else {
-        // If clicked on another own piece, select that one instead
-        const piece = game.get(square);
-        if (piece && piece.color === game.turn()) {
-          setSelectedSquare(square);
-          
-          // Get possible moves for this piece
-          const moves = game.moves({ 
-            square: square, 
-            verbose: true 
-          });
-          
-          setPossibleMoves(moves);
-        } else {
-          // If clicked on an invalid square, clear selection
-          setSelectedSquare(null);
-          setPossibleMoves([]);
-        }
-      }
     }
   };
 
@@ -287,16 +306,28 @@ const ChessGame = ({ playerColor, searchDepth = 15 }) => {
     
     // Highlight selected square
     if (selectedSquare) {
-      styles[selectedSquare] = { backgroundColor: 'rgba(0, 0, 255, 0.3)' };
+      styles[selectedSquare] = { 
+        backgroundColor: 'rgba(0, 100, 255, 0.6)',
+        boxShadow: 'inset 0 0 0 3px rgba(0, 100, 255, 0.8)'
+      };
       
-      // Highlight possible moves
+      // Highlight possible moves with distinct colors
       possibleMoves.forEach(move => {
-        // Green for empty squares, red for captures
         const pieceOnTarget = game.get(move.to);
         if (pieceOnTarget) {
-          styles[move.to] = { backgroundColor: 'rgba(255, 0, 0, 0.5)' }; // Red for captures
+          // Red for captures with stronger visual indication
+          styles[move.to] = { 
+            backgroundColor: 'rgba(255, 50, 50, 0.7)',
+            boxShadow: 'inset 0 0 0 3px rgba(255, 50, 50, 0.9)',
+            border: '2px solid rgba(255, 0, 0, 0.8)'
+          };
         } else {
-          styles[move.to] = { backgroundColor: 'rgba(0, 255, 0, 0.4)' }; // Green for empty squares
+          // Green for empty squares with visual indication
+          styles[move.to] = { 
+            backgroundColor: 'rgba(50, 255, 50, 0.6)',
+            boxShadow: 'inset 0 0 0 2px rgba(50, 255, 50, 0.8)',
+            border: '2px solid rgba(0, 200, 0, 0.6)'
+          };
         }
       });
     }
@@ -305,8 +336,16 @@ const ChessGame = ({ playerColor, searchDepth = 15 }) => {
   }, [lastMove, selectedSquare, possibleMoves, game]);
 
   return (
-    <div className="chess-game">
-      <div className="board-container">
+    <div className={`chess-game ${
+      (game.turn() === 'w' && playerColor === 'black') ||
+      (game.turn() === 'b' && playerColor === 'white') ||
+      isThinking ? 'not-player-turn' : ''
+    }`}>
+      <div className={`board-container ${
+        isThinking ? 'ai-thinking' : 
+        ((game.turn() === 'w' && playerColor === 'white') ||
+         (game.turn() === 'b' && playerColor === 'black')) ? 'player-turn' : ''
+      }`}>
         <Chessboard
           position={game.fen()}
           onSquareClick={handleSquareClick}
@@ -316,6 +355,8 @@ const ChessGame = ({ playerColor, searchDepth = 15 }) => {
             boxShadow: '0 5px 15px rgba(0, 0, 0, 0.5)'
           }}
           customSquareStyles={customSquareStyles}
+          arePremovesAllowed={false}
+          arePiecesDraggable={false}
         />
       </div>
       
@@ -323,7 +364,27 @@ const ChessGame = ({ playerColor, searchDepth = 15 }) => {
         <div className="info-card">
           <div className={`status-indicator ${isThinking ? 'thinking' : game.isCheckmate() ? 'checkmate' : game.isDraw() ? 'draw' : 'active'}`}>
             <span>Status:</span> 
-            {isThinking ? 'AI is thinking...' : gameStatus}
+            {isThinking ? (
+              'AI is thinking...'
+            ) : game.isGameOver() ? (
+              gameStatus
+            ) : (
+              <>
+                {gameStatus}
+                {((game.turn() === 'w' && playerColor === 'white') ||
+                  (game.turn() === 'b' && playerColor === 'black')) && (
+                  <span style={{ marginLeft: '10px', color: '#4caf50', fontWeight: 'bold' }}>
+                    (Your turn - Click a piece to see valid moves)
+                  </span>
+                )}
+                {((game.turn() === 'w' && playerColor === 'black') ||
+                  (game.turn() === 'b' && playerColor === 'white')) && (
+                  <span style={{ marginLeft: '10px', color: '#ff9800', fontWeight: 'bold' }}>
+                    (AI's turn - Please wait)
+                  </span>
+                )}
+              </>
+            )}
           </div>
         </div>
         

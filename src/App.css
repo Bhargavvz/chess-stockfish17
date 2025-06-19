@@ -476,6 +476,101 @@ footer a:hover {
   font-weight: 500 !important;
 }
 
+/* Enhanced Chess Board Interaction Styles */
+.chess-board-wrapper {
+  position: relative;
+}
+
+/* Highlight valid move squares with animation */
+.valid-move-highlight {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 3px solid rgba(50, 255, 50, 0.8);
+  border-radius: 50%;
+  background-color: rgba(50, 255, 50, 0.3);
+  animation: pulse 1.5s infinite;
+  pointer-events: none;
+}
+
+.capture-move-highlight {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 3px solid rgba(255, 50, 50, 0.9);
+  border-radius: 4px;
+  background-color: rgba(255, 50, 50, 0.4);
+  animation: pulseCapture 1.5s infinite;
+  pointer-events: none;
+}
+
+.selected-piece-highlight {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 4px solid rgba(0, 100, 255, 0.9);
+  border-radius: 4px;
+  background-color: rgba(0, 100, 255, 0.3);
+  box-shadow: 0 0 10px rgba(0, 100, 255, 0.6);
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+}
+
+@keyframes pulseCapture {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+    border-width: 3px;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+    border-width: 4px;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+    border-width: 3px;
+  }
+}
+
+/* Cursor styles for different board states */
+.chess-game .board-container {
+  cursor: default;
+}
+
+.chess-game .board-container.player-turn {
+  cursor: pointer;
+}
+
+.chess-game .board-container.ai-thinking {
+  cursor: wait;
+}
+
+/* Disabled state for non-player turns */
+.chess-game.not-player-turn {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.chess-game.not-player-turn .board-container {
+  filter: grayscale(20%);
+}
+
 @media (max-width: 768px) {
   .game-container {
     flex-direction: column;
@@ -508,4 +603,4 @@ footer a:hover {
   .settings-grid {
     grid-template-columns: 1fr;
   }
-} 
+}
