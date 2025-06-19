@@ -11,6 +11,9 @@
     "@types/react": "^18.2.61",
     "@types/react-dom": "^18.2.19",
     "chess.js": "^1.0.0-beta.7",
+    "compression": "^1.7.4",
+    "express": "^4.18.2",
+    "helmet": "^7.1.0",
     "react": "^18.2.0",
     "react-chessboard": "^4.4.0",
     "react-dom": "^18.2.0",
@@ -24,7 +27,12 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "serve": "node server.js",
+    "deploy:static": "./deploy.sh static",
+    "deploy:pm2": "./deploy.sh pm2",
+    "deploy:docker": "./deploy.sh docker",
+    "build:production": "NODE_ENV=production npm run build"
   },
   "eslintConfig": {
     "extends": [
